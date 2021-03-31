@@ -7,7 +7,7 @@ Install this extension from the [Chrome Web Store][cws-hnr]
 
 ## Features
 
-![Image of browser icon](package/images/mnr-logo-16.png]When you click the browser button,
+![Image of browser icon](package/images/mnr-logo-16.png)&emsp;&#x2190;When you click the browser button,
 ham-n-rich locates text within body.innerHTML that matches a regexp for US callsigns, and encloses
 that in a link to the QRZ page for that callsign.
 
