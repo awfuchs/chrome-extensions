@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MarkWack extension options</title>
+  <link rel="stylesheet" href="css/awsm.min.css" id="theme">
+  <link rel="stylesheet" id="preload-theme">
+  <link rel="stylesheet" id="prism-theme">
+</head>
+<body>
+
+<header><h1>Options for MarkWack extension</h1></header>
+
+<div>
+<h2>Length tuning parameters</h2>
+
+Minimum paragraph length:
+<select id="minparas">
+ <option value="1">At least 1 sentence</option>
+ <option value="2">At least 2 sentences</option>
+ <option value="3">At least 3 sentences</option>
+</select>
+
+<br/>
+Maximum sentence length:
+<select id="maxparas">
+ <option value="4">No more than 4 sentences</option>
+ <option value="5">No more than 5 sentences</option>
+ <option value="6">No more than 6 sentences</option>
+</select>
+</div>
+
+<!--
+<label>
+  <input type="checkbox" id="like">
+  I like colors.
+</label>
+-->
+
+<div id="status"></div>
+<button id="save">Save</button>
+
+<script src="options.js"></script>
+</body>
+</html>

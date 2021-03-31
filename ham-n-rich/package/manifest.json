@@ -1,0 +1,19 @@
+{
+  "name": "Ham-n-rich",
+  "action": {},
+  "description": "Enrich web pages by linking US Amateur callsigns to their respective QRZ pages.",
+  "version": "0.1",
+  "manifest_version": 3,
+  "icons": {
+    "16": "/images/mnr-logo-16.png",
+    "48": "/images/mnr-logo-48.png",
+    "128": "/images/mnr-logo-128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
