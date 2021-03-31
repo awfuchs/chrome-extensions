@@ -7,7 +7,7 @@ Install this extension from the [Chrome Web Store][cws-mw]
 
 ## Features
 
-![Image of browser icon](package/images/mw-logo-16.png]When you click the browser button,
+![Image of browser icon](package/images/mw-logo-16.png)When you click the browser button,
 markwack does the following:
 
 1. Grab the text content of the page body
