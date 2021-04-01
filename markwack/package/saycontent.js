@@ -37,7 +37,8 @@ function makeDicts(t) {
   var blob = {
     firstWords: [],
     lastWords: [],
-    wordPairs: {}
+    wordPairs: {},
+    wordTriples: {}
   }
   for( s in t ) {
     words=t[s].split(/[ ,]+/);
@@ -45,7 +46,7 @@ function makeDicts(t) {
       // --- Add first and last sentence words to respective lists ---
       blob.firstWords.push(words[0]);
       blob.lastWords.push(words[words.length-1]);
-      // --- Populate dictionary of w1->w2 transitions ---
+      // --- Populate dictionary of w1->w2 and w1->w2->w3 transitions ---
       for( wx=0; wx < words.length-1; wx++) {
 	w=words[wx];
 	n=words[wx+1];
@@ -53,6 +54,14 @@ function makeDicts(t) {
           blob.wordPairs[w]=[];
         }
         blob.wordPairs[w].push(n);
+        if(wx < words.length-2) {
+          word3=words[wx+2];
+          w1_w2=tuple(w,n); // e.g. "when|they"
+	  if( !(w1_w2 in blob.wordTriples) ) {
+	    blob.wordTriples[w1_w2]=[];
+	  }
+	  blob.wordTriples[w1_w2].push(word3);
+        }
       }
     }
   }
@@ -71,23 +80,34 @@ function outputWack(dicts, numParas) {
 
   for( p=0; p<numParas; p++ ){
     for (i=0; i<numSentences; i++) {
-      wcount=0;
+      wcount=1;
       w1=rndSelectFrom(dicts.firstWords);
-      //w2=rndSelectFrom(dicts.wordPairs[w1]);
+      w2=rndSelectFrom(dicts.wordPairs[w1]);
       emit( w1 );
+      emit( " " );
+      emit( w2 );
       emit( " " );
       while( true ) {
 	wcount++;
-	nextword = rndSelectFrom(dicts.wordPairs[w1]);
+	w1_w2=tuple(w1,w2);
+	if(w1_w2 in dicts.wordTriples) {
+	  nextword = rndSelectFrom(dicts.wordTriples[w1_w2]);
+	} else {
+	  // Trusting that if there's no triple then this must exist...
+	  nextword = rndSelectFrom(dicts.wordPairs[w2]);
+	}
 
 	// --- Should we end the sentence at this word? ---
+	// TODO: This logic can be improved. As sentence length exceeds ideal, should
+	// look ahead and pick Triples that have lastWords in them, or then Pairs that do.
+
 	let stopnow = false;
-	if (wcount>sentMaxLen) {stopnow=true;}
-	if (nextword in dicts.lastWords) {stopnow=true;}
-	if (wcount<sentMinLen) {stopnow=false;}
-	if (!(nextword in dicts.wordPairs)){stopnow=true;}
+	if (nextword in dicts.lastWords) {stopnow=true;} // Stop if it's sound to do so
+	if (wcount<sentMinLen) {stopnow=false;}          // Except never before reaching min size
+	if (!(nextword in dicts.wordTriples)
+	   && !(nextword in dicts.wordPairs)){stopnow=true;} // But DO stop if there is no next key
 	if (wcount>sentMaxLen) {
-	  nextword=rndSelectFrom(dicts.lastWords);
+	  nextword=rndSelectFrom(dicts.lastWords);       // Hard stop, force last word if > max size
 	  stopnow=true;
 	}
 
@@ -96,9 +116,8 @@ function outputWack(dicts, numParas) {
 	  break;
 	} else {
 	  emit( nextword+" " );
-	  //w1=w2;
-	  //w2=nextword;
-	  w1=nextword;
+	  w1=w2;
+	  w2=nextword;
 	}
       }
     }
@@ -110,7 +129,7 @@ function outputWack(dicts, numParas) {
 function cleanText(t) {
   return t.replace("Dr.", "Dr")
           .replace("e.g.", "for example")
-          .replace(/[^\u00C0-\u024F\u0300-\u04FFA-Za-z'’\d .?,!;]/g, " ")
+          .replace(/[^\u00C0-\u024F\u0300-\u04FFA-Za-z'’\d .?,!;/-]/g, " ")
 }
 
 function asSentences(t) {
@@ -131,6 +150,10 @@ function rndIntBetween(lo,hi) {
   scal=(hi-lo);
   r = Math.floor(Math.random()*scal);
   return r+lo;
+}
+
+function tuple( w1, w2 ) {
+  return w1+"|"+w2;
 }
 
 
