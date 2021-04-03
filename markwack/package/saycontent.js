@@ -7,6 +7,10 @@ paraMinCnt=1;
 paraMaxCnt=6;
 options=restoreOptions();
 
+function populate(tab, content) {
+  theHtml="<html><body><p>"+content+"</p></body></html>"
+  console.log(theHtml);
+}
 
 function sayContent() {
   chrome.storage.sync.get({
@@ -19,6 +23,9 @@ function sayContent() {
   });
 }
 
+
+
+
 function buildAndGenerateOutput(){
   paragraphs=rndIntBetween(paraMinCnt, paraMaxCnt);
   risultato=
@@ -29,6 +36,13 @@ function buildAndGenerateOutput(){
             (document.body.innerText
     ))), paragraphs ));
   alert(risultato);
+  doNewTab("Howdy!");
+}
+
+function doNewTab(content){
+  chrome.runtime.sendMessage({greeting: "hello"}, {}, function(response) {
+    console.log(response.farewell);
+  });
 }
 
 function makeDicts(t) {

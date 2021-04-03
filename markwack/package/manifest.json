@@ -2,7 +2,7 @@
   "name": "MarkWack",
   "action": {},
   "description": "Produce some Markov-chain random prose based on the content of the current page.",
-  "version": "0.2",
+  "version": "0.3",
   "manifest_version": 3,
   "options_page": "options.html",
   "icons": {
@@ -12,6 +12,7 @@
   },
   "permissions": [
     "activeTab",
+    "tabs",
     "storage",
     "scripting"
   ],
