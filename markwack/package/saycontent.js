@@ -1,10 +1,14 @@
+minInputWords=3;
 sentMinLen=4;
 sentTargetLen=8;
 sentMaxLen=12;
 paraMinLen=2;
 paraMaxLen=6;
+
+// Options
 paraMinCnt=1;
 paraMaxCnt=6;
+outputChannel="alert"; // alert|tab|console
 options=restoreOptions();
 
 function populate(tab, content) {
@@ -35,13 +39,21 @@ function buildAndGenerateOutput(){
           (cleanText
             (document.body.innerText
     ))), paragraphs ));
-  alert(risultato);
-  doNewTab("Howdy!");
+  if( options.outChannel == "alert" ) {
+    alert(risultato);
+  } else if( options.outChannel == "tab" ) {
+    doNewTab(risultato);
+  } else if( options.outChannel == "console" ) {
+    console.log(risultato);
+  } else {
+    console.error("Unknown output channel!");
+  }
 }
 
 function doNewTab(content){
-  chrome.runtime.sendMessage({greeting: "hello"}, {}, function(response) {
-    console.log(response.farewell);
+  console.log("Publishing: "+content);
+  chrome.runtime.sendMessage({op: "publish", data: String(content)}, {}, function(response) {
+    console.log(response);
   });
 }
 
@@ -55,6 +67,7 @@ function makeDicts(t) {
     wordTriples: {}
   }
   for( s in t ) {
+    if( t[s].length < minInputWords ) break;
     words=t[s].split(/[ ,]+/);
     if (words.length>2) {
       // --- Add first and last sentence words to respective lists ---
@@ -178,17 +191,19 @@ function restoreOptions() {
     minParas: "1",
     maxParas: "6"
   }
-  function seto(i,j) {
+  function seto(i,j,k) {
     o.minParas=i;
     o.maxParas=j;
+    o.outChannel=k;
   }
 
   chrome.storage.sync.get({
     minimumParagraphs: '2',
-    maximumParagraphs: '4'
+    maximumParagraphs: '4',
+    outputChannel: 'alert'
     }, function(items) {
     console.log(items);
-    seto(items.minimumParagraphs, items.maximumParagraphs);
+    seto(items.minimumParagraphs, items.maximumParagraphs, items.outputChannel);
     //paraMinCnt=items.minimumParagraphs;
     //paraMaxCnt=items.maximumParagraphs;
   });

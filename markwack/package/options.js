@@ -2,9 +2,12 @@
 function save_options() {
   var minPL = document.getElementById('minparas').value;
   var maxPL = document.getElementById('maxparas').value;
+  var whatchannel = document.getElementById('outputchannel').value;
+  
   chrome.storage.sync.set({
     minimumParagraphs: minPL,
     maximumParagraphs: maxPL,
+    outputChannel: whatchannel
   }, function() {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
@@ -19,10 +22,12 @@ function save_options() {
 function restore_options() {
   chrome.storage.sync.get({
     minimumParagraphs: '2',
-    maximumParagraphs: '4'
+    maximumParagraphs: '4',
+    outputChannel: 'alert'
   }, function(items) {
     document.getElementById('minparas').value = items.minimumParagraphs;
     document.getElementById('maxparas').value = items.maximumParagraphs;
+    document.getElementById('outputchannel').value = items.outputChannel;
   });
 }
 document.addEventListener('DOMContentLoaded', restore_options);
