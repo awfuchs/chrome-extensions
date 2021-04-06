@@ -42,12 +42,7 @@ function injectScript(id) {
 }
 
 function updateContent(id, content) {
-  chrome.scripting.executeScript(
-    { target: { tabId: id }, files: ['selfout.js'], }
-  )
-  .then( results => chrome.tabs.sendMessage( id, {content: String(content)}, {} ) )
-  //.then( response => {console.log(response)} )
-  .catch( err => {console.error(err)} );
+  chrome.tabs.sendMessage( id, {content: String(content)}, {} )
 }
 
 

@@ -1,6 +1,7 @@
 
 function sayContent() {
   risultato=document.body.innerText;
+  //risultato="Twas brillig, and the slithy toves did gyre and gimbal in the wabe.";
   doNewTab(risultato);
 }
 

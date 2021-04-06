@@ -4,6 +4,5 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     alert("New tab got request with some content...");
     document.body.innerText=request.content;
-    function (sendResponse) {console.log(sendResponse)};
   }
 );
