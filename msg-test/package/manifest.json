@@ -1,0 +1,15 @@
+{
+  "name": "Message Testing",
+  "action": {},
+  "description": "Put the text from the current tab into a new tab.",
+  "version": "0.1",
+  "manifest_version": 3,
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
