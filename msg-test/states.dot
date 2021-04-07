@@ -4,9 +4,9 @@ digraph {
   init [shape=point id=black];
   done [shape=plain  label="done"]
   init -> started [label="action.onClick"]
-  started -> tab_present [xlabel="tab init done"]
-  started -> content_present [label="content generated"]
-  tab_present -> ready [xlabel="content generated"]
-  content_present -> ready [label="tab init done"]
-  ready -> done [label="output to tab"]
+  started -> hastab [xlabel="tab_done"]
+  started -> hascontent [label="content_done"]
+  hastab -> ready [xlabel="content_done"]
+  hascontent -> ready [label="tab_done"]
+  ready -> done [label="do_output"]
 }
