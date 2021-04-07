@@ -1,15 +1,15 @@
-minInputWords=3;
-sentMinLen=4;
-sentTargetLen=8;
-sentMaxLen=12;
-paraMinLen=2;
-paraMaxLen=6;
+var minInputWords=3;
+var sentMinLen=4;
+var sentTargetLen=8;
+var sentMaxLen=12;
+var paraMinLen=2;
+var paraMaxLen=6;
 
 // Options
-paraMinCnt=1;
-paraMaxCnt=6;
-outputChannel="alert"; // alert|tab|console
-options=restoreOptions();
+var paraMinCnt=1;
+var paraMaxCnt=6;
+var outputChannel="alert"; // alert|tab|console
+var options=restoreOptions();
 
 function populate(tab, content) {
   theHtml="<html><body><p>"+content+"</p></body></html>"
