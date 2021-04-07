@@ -1,0 +1,12 @@
+digraph {
+  splines=curved
+  stylesheet = "https://g3doc.corp.google.com/frameworks/g3doc/includes/graphviz-style.css"
+  init [shape=point id=black];
+  done [shape=plain  label="done"]
+  init -> started [label="action.onClick"]
+  started -> tab_present [xlabel="tab init done"]
+  started -> content_present [label="content generated"]
+  tab_present -> ready [xlabel="content generated"]
+  content_present -> ready [label="tab init done"]
+  ready -> done [label="output to tab"]
+}
