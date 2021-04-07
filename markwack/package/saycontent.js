@@ -11,11 +11,23 @@ var paraMaxCnt=6;
 var outputChannel="alert"; // alert|tab|console
 var options=restoreOptions();
 
-function populate(tab, content) {
-  theHtml="<html><body><p>"+content+"</p></body></html>"
-  console.log(theHtml);
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if( request.op == "output" ) { doOutput(request.data); }
+    if( request.op == "create" ) { doCreate(request.data); }
+  }
+);
+
+function doOutput(content) {
+  alert(content);
 }
 
+function doCreate(foo) {
+  let content = buildAndGenerateOutput();
+  chrome.runtime.sendMessage( {op: "content_done", data: content} );
+}
+
+/*
 function sayContent() {
   chrome.storage.sync.get({
     minimumParagraphs: '2',
@@ -26,6 +38,7 @@ function sayContent() {
     buildAndGenerateOutput();
   });
 }
+*/
 
 
 
@@ -39,22 +52,7 @@ function buildAndGenerateOutput(){
           (cleanText
             (document.body.innerText
     ))), paragraphs ));
-  if( options.outChannel == "alert" ) {
-    alert(risultato);
-  } else if( options.outChannel == "tab" ) {
-    doNewTab(risultato);
-  } else if( options.outChannel == "console" ) {
-    console.log(risultato);
-  } else {
-    console.error("Unknown output channel!");
-  }
-}
-
-function doNewTab(content){
-  console.log("Publishing: "+content);
-  chrome.runtime.sendMessage({op: "publish", data: String(content)}, {}, function(response) {
-    console.log(response);
-  });
+ return risultato;
 }
 
 function makeDicts(t) {
@@ -210,5 +208,5 @@ function restoreOptions() {
   return o;
 }
 
-sayContent();
+//sayContent();
 
