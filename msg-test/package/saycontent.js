@@ -1,16 +1,13 @@
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if (request.op == "makecontent")
+      sendResponse({ content: String(sayContent()) });
+  }
+);
+
 
 function sayContent() {
   risultato=document.body.innerText;
-  //risultato="Twas brillig, and the slithy toves did gyre and gimbal in the wabe.";
-  doNewTab(risultato);
+  return risultato;
 }
-
-function doNewTab(content){
-  console.log("Publishing: "+content);
-  chrome.runtime.sendMessage({op: "publish", data: String(content)}, {}, function(response) {
-    console.log(response);
-  });
-}
-
-sayContent();
 
