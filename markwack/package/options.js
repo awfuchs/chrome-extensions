@@ -1,12 +1,13 @@
 // Saves options to chrome.storage
 function save_options() {
-  var minPL = document.getElementById('minparas').value;
-  var maxPL = document.getElementById('maxparas').value;
+  console.log("saving options...");
+  var minPL = document.getElementById('minparalen').value;
+  var maxPL = document.getElementById('maxparalen').value;
   var whatchannel = document.getElementById('outputchannel').value;
   
   chrome.storage.sync.set({
-    minimumParagraphs: minPL,
-    maximumParagraphs: maxPL,
+    minimumParagraphLength: minPL,
+    maximumParagraphLength: maxPL,
     outputChannel: whatchannel
   }, function() {
     // Update status to let user know options were saved.
@@ -20,14 +21,16 @@ function save_options() {
 
 // Restores options state using the preferences stored in chrome.storage
 function restore_options() {
+  console.log("Restoring options...");
   chrome.storage.sync.get({
-    minimumParagraphs: '2',
-    maximumParagraphs: '4',
+    minimumParagraphLength: '2',
+    maximumParagraphLength: '6',
     outputChannel: 'alert'
   }, function(items) {
-    document.getElementById('minparas').value = items.minimumParagraphs;
-    document.getElementById('maxparas').value = items.maximumParagraphs;
+    document.getElementById('minparalen').value = items.minimumParagraphLength;
+    document.getElementById('maxparalen').value = items.maximumParagraphLength;
     document.getElementById('outputchannel').value = items.outputChannel;
+    console.log("...options restored.");
   });
 }
 document.addEventListener('DOMContentLoaded', restore_options);

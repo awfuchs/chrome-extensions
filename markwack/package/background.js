@@ -1,12 +1,12 @@
 var sourceTab=0;
 var sinkTab=0;
-options={outputWhere: "tab"};
+var mwOptions=restoreOptions();
 var theContent="";
 
 function reinitialize() {
+  mwOptions=restoreOptions();
   sourceTab=0;
   sinkTab=0;
-  options={outputWhere: "tab"};
   theContent="";
 }
 /*
@@ -24,7 +24,7 @@ var stateTable= {
   },
   started: {
     on_click: {next: "started", func: enterStarted},
-    tab_done: {next: "hastab", func: enterHasTab},
+    sink_ready: {next: "hastab", func: enterHasTab},
     content_done: {next: "hascontent", func: enterHasContent}
   },
   hastab: {
@@ -33,7 +33,7 @@ var stateTable= {
   },
   hascontent: {
     on_click: {next: "started", func: enterStarted},
-    tab_done: {next: "ready", func: enterReady}
+    sink_ready: {next: "ready", func: enterReady}
   },
   ready: {
     on_click: {next: "started", func: enterStarted},
@@ -89,18 +89,35 @@ function setUpSourceTab(tabid) {
  */
 
 function enterStarted(srctab) {
+  console.log("Running enterStarted");
+  setUpSourceTab(srctab.id);         // set up the source tab
+  switch( mwOptions.outChannel ) {
+    case "tab":
+      startSinkOnNewTab();
+      break;
+    case "alert":
+      startSinkOnSourceTab();
+      break;
+    default:
+      console.error("Unknown outChannel option "+mwOptions.outChannel);
+  }
+}
+
+function startSinkOnSourceTab() {
+  chrome.tabs.sendMessage(
+    sourceTab,
+    { op: "areyoualive", data: "" }   // when there's no source tab
+  );
+}
+
+function startSinkOnNewTab() {
+  // create the sink tab ... result.html will send sink_ready
+  // we do it this way to ensure the tab has spun up to a state where it can receive messages
   function cacheSinkTabID(tab) {
     sinkTab=tab.id;
     console.log("  sink tab ID="+sinkTab);
   }
-  console.log( "Running enterStarted; source tab ID="+srctab.id);
-  setUpSourceTab(srctab.id);         // set up the source tab
-  chrome.tabs.create( {              // create the sink tab
-      //active: false,
-      url: "result.html"             // result.html invokes selfout.js
-    },
-    (tab) => cacheSinkTabID(tab)
-  );
+  chrome.tabs.create( { url: "result.html" }, (tab) => cacheSinkTabID(tab));
 }
 
 function enterHasTab(foo) {
@@ -122,8 +139,13 @@ function enterHasContent(content) {
 
 function enterReady(foo) {
   console.log( "Running enterReady" );
-  // send content to output tab
-  chrome.tabs.sendMessage( sinkTab, {op: "output", data: foo });
+  if( mwOptions.outChannel == "tab" ) {
+    chrome.tabs.sendMessage( sinkTab, {op: "output", data: foo });
+  }
+  else if( mwOptions.outChannel == "alert" ) {
+    chrome.tabs.sendMessage( sourceTab, {op: "output", data: foo });
+  }
+    
 }
 
 function enterDone() {
@@ -132,4 +154,28 @@ function enterDone() {
   chrome.tabs.activate(sinkTab);
   reinitialize();
 }
+
+function restoreOptions() {
+  let o = {
+    minParaLen: "1",
+    maxParaLen: "6",
+    outChannel: "alert"
+  }
+  function seto(i,j,k) {
+    o.minParaLen=i;
+    o.maxParaLen=j;
+    o.outChannel=k;
+  }
+
+  chrome.storage.sync.get({
+    minimumParagraphLength: '2',
+    maximumParagraphLength: '4',
+    outputChannel: 'alert'
+    }, function(items) {
+    //console.log(items);
+    seto(items.minimumParagraphLength, items.maximumParagraphLength, items.outputChannel);
+  });
+  return o;
+}
+
 

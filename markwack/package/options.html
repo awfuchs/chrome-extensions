@@ -14,18 +14,37 @@
 <h2>Length tuning parameters</h2>
 
 Minimum paragraph length:
-<select id="minparas">
- <option value="1">At least 1 sentence</option>
+<select id="minparalen">
  <option value="2">At least 2 sentences</option>
- <option value="3">At least 3 sentences</option>
+ <option value="4">At least 3 sentences</option>
+ <option value="5">At least 5 sentences</option>
 </select>
 
 <br/>
-Maximum sentence length:
-<select id="maxparas">
- <option value="4">No more than 4 sentences</option>
- <option value="5">No more than 5 sentences</option>
+Maximum paragraph length:
+<select id="maxparalen">
  <option value="6">No more than 6 sentences</option>
+ <option value="9">No more than 9 sentences</option>
+ <option value="12">No more than 12 sentences</option>
+</select>
+</div>
+
+<br/>
+<br/>
+
+Minimum number or paragraphs:
+<select id="minparanum">
+ <option value="1">At least 1 paragraph</option>
+ <option value="2">At least 2 paragraphs</option>
+ <option value="3">At least 3 paragraphs</option>
+</select>
+
+<br/>
+Maximum number or paragraphs:
+<select id="maxparanum">
+ <option value="4">No more than 4 paragraphs</option>
+ <option value="7">No more than 7 paragraphs</option>
+ <option value="12">No more than 12 paragraphs</option>
 </select>
 </div>
 
@@ -35,7 +54,6 @@ Where to send the output:
 <select id="outputchannel">
  <option value="alert">Pop up an alert</option>
  <option value="tab">Into a new tab</option>
- <option value="console">Just to the console</option>
 </select>
 
 <div id="status"></div>

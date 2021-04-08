@@ -2,19 +2,17 @@ var minInputWords=3;
 var sentMinLen=4;
 var sentTargetLen=8;
 var sentMaxLen=12;
-var paraMinLen=2;
-var paraMaxLen=6;
 
 // Options
 var paraMinCnt=1;
 var paraMaxCnt=6;
-var outputChannel="alert"; // alert|tab|console
-var options=restoreOptions();
+var mwOptions=restoreOptions();
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if( request.op == "output" ) { doOutput(request.data); }
-    if( request.op == "create" ) { doCreate(request.data); }
+    if ( request.op == "output" )          { doOutput(request.data); }
+    else if( request.op == "create" )      { doCreate(request.data); }
+    else if( request.op == "areyoualive" ) { doImAlive(request.data); }
   }
 );
 
@@ -25,6 +23,10 @@ function doOutput(content) {
 function doCreate(foo) {
   let content = buildAndGenerateOutput();
   chrome.runtime.sendMessage( {op: "content_done", data: content} );
+}
+
+function doImAlive(foo) {
+  chrome.runtime.sendMessage( {op: "sink_ready", data: "" } );
 }
 
 /*
@@ -45,13 +47,14 @@ function sayContent() {
 
 function buildAndGenerateOutput(){
   paragraphs=rndIntBetween(paraMinCnt, paraMaxCnt);
-  risultato=
+  let risultato=
     (outputWack
       (makeDicts
         (asSentences
           (cleanText
             (document.body.innerText
     ))), paragraphs ));
+  console.log(risultato);
  return risultato;
 }
 
@@ -97,7 +100,7 @@ function outputWack(dicts, numParas) {
   var wcount=0;
   var theOutput="";
   var nextword, p, w1, w2, i, j;
-  var numSentences=rndIntBetween(paraMinLen, paraMaxLen);
+  var numSentences=rndIntBetween(mwOptions.minParaLen, mwOptions.maxParaLen);
 
   function emit(s){
     theOutput += s;
@@ -185,28 +188,26 @@ function tuple( w1, w2 ) {
 
 
 function restoreOptions() {
-  var o = {
-    minParas: "1",
-    maxParas: "6"
+  let o = {
+    minParaLen: "1",
+    maxParaLen: "6",
+    outChannel: "alert"
   }
   function seto(i,j,k) {
-    o.minParas=i;
-    o.maxParas=j;
+    o.minParaLen=i;
+    o.maxParaLen=j;
     o.outChannel=k;
   }
 
   chrome.storage.sync.get({
-    minimumParagraphs: '2',
-    maximumParagraphs: '4',
+    minimumParagraphLength: '2',
+    maximumParagraphLength: '4',
     outputChannel: 'alert'
     }, function(items) {
-    console.log(items);
-    seto(items.minimumParagraphs, items.maximumParagraphs, items.outputChannel);
-    //paraMinCnt=items.minimumParagraphs;
-    //paraMaxCnt=items.maximumParagraphs;
+    //console.log(items);
+    seto(items.minimumParagraphLength, items.maximumParagraphLength, items.outputChannel);
   });
   return o;
 }
 
-//sayContent();
 
