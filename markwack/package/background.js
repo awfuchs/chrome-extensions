@@ -3,6 +3,12 @@ var sinkTab=0;
 options={outputWhere: "tab"};
 var theContent="";
 
+function reinitialize() {
+  sourceTab=0;
+  sinkTab=0;
+  options={outputWhere: "tab"};
+  theContent="";
+}
 /*
  * The state machine. A state table, an event handler to do state transitions
  * and call state-entry functions.
@@ -90,7 +96,7 @@ function enterStarted(srctab) {
   console.log( "Running enterStarted; source tab ID="+srctab.id);
   setUpSourceTab(srctab.id);         // set up the source tab
   chrome.tabs.create( {              // create the sink tab
-      active: false,
+      //active: false,
       url: "result.html"             // result.html invokes selfout.js
     },
     (tab) => cacheSinkTabID(tab)
@@ -123,5 +129,7 @@ function enterReady(foo) {
 function enterDone() {
   console.log( "Running enterDone" );
   // activate the output tab
+  chrome.tabs.activate(sinkTab);
+  reinitialize();
 }
 
