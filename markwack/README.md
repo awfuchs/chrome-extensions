@@ -21,17 +21,17 @@ markwack does the following:
 ## Issues
 
 * Doesn't support all languages. (Doesn't recognize as text Unicode characters over 04FF.)
-* Outputs only to an alert, so not easy to copy the output for Lorem Ipsum purposes.
+* FIXED: Outputs only to an alert, so not easy to copy the output for Lorem Ipsum purposes.
 * Configuration options are limited.
 
 ## To do
 
-* **Upgrade from two-word chaining rules to three-word rules.** I didn't do this initially because
+* **DONE Upgrade from two-word chaining rules to three-word rules.** I didn't do this initially because
   JavaScript doesn't easily do tuples as keys. This was easy as a Python dictionary. Probably will
   fake this in JS by concatenating keys into compound strings like "is|always".
 * **Add more Unicode characters.** The constraint here is that we don't want most punctuation included
   in the strings, and it's hard for me to determine this for languages I don't know. 
-* **Allow more output channel options.** Only having this in an alert is not great to look at, and
+* **WIP Allow more output channel options.** Only having this in an alert is not great to look at, and
   doesn't facilitate copying the text.
 * **Generate random HTML elements.** It would be fun to include random headings, lists, tables, and
   so on. This is a much longer-term goal.
