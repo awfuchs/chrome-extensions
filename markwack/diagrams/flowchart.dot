@@ -1,0 +1,23 @@
+digraph G {
+  start [
+    label = "user clicks";
+    shape = plain;
+  ];
+  done [
+    label = "done";
+    shape = oval;
+  ];
+  node [shape=rect;]
+  readpage [label="Read text content\nfrom source tab"];
+  build [label="Build dictionaries"];
+  generate [label="Generate random text\nfrom dictionaries"];
+  sendtab [label="Create new tab and\nwith generated text"];
+  sendalert [label="Open an alert\nwith generated text"];
+  start -> readpage;
+  readpage -> build;
+  build -> generate;
+  generate -> sendtab [ xlabel = "user option\noutput=tab" ];
+  generate -> sendalert [ label = "user option\noutput=alert" ];
+  sendtab -> done;
+  sendalert -> done;
+}
