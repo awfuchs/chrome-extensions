@@ -29,24 +29,9 @@ function doImAlive(foo) {
   chrome.runtime.sendMessage( {op: "sink_ready", data: "" } );
 }
 
-/*
-function sayContent() {
-  chrome.storage.sync.get({
-    minimumParagraphs: '2',
-    maximumParagraphs: '4'
-    }, function(items) {
-    paraMinCnt=items.minimumParagraphs;
-    paraMaxCnt=items.maximumParagraphs;
-    buildAndGenerateOutput();
-  });
-}
-*/
-
-
-
 
 function buildAndGenerateOutput(){
-  paragraphs=rndIntBetween(paraMinCnt, paraMaxCnt);
+  paragraphs=rndIntBetween(mwOptions.paraMinCnt, mwOptions.paraMaxCnt);
   let risultato=
     (outputWack
       (makeDicts
@@ -58,6 +43,14 @@ function buildAndGenerateOutput(){
  return risultato;
 }
 
+/*
+ * The makeDicts function: build a dictionary collection
+ *
+ * t -- An array of strings, one per sentence in the input
+ *
+ * Returns: a dictionary collection
+ */
+
 function makeDicts(t) {
   var w;
   var n;
@@ -68,7 +61,7 @@ function makeDicts(t) {
     wordTriples: {}
   }
   for( s in t ) {
-    if( t[s].length < minInputWords ) break;
+    if( t[s].length < mwOptions.minParseLen ) break;
     words=t[s].split(/[ ,]+/);
     if (words.length>2) {
       // --- Add first and last sentence words to respective lists ---
@@ -96,6 +89,15 @@ function makeDicts(t) {
   return blob;
 }
 
+/*
+ * The outputWack function: create n paragraphs of wacky ouput
+ *
+ * dicts -- a dictionary collection object
+ * numParas -- how many paragraphs to generate
+ *
+ * Returns: a string containing the generated text
+ */
+ 
 function outputWack(dicts, numParas) {
   var wcount=0;
   var theOutput="";
@@ -120,9 +122,12 @@ function outputWack(dicts, numParas) {
 	w1_w2=tuple(w1,w2);
 	if(w1_w2 in dicts.wordTriples) {
 	  nextword = rndSelectFrom(dicts.wordTriples[w1_w2]);
-	} else {
-	  // Trusting that if there's no triple then this must exist...
+	} else if(w2 in dicts.wordPairs) {
+	  // No triple? Then here's hoping that it does exist...
 	  nextword = rndSelectFrom(dicts.wordPairs[w2]);
+	} else if(w2 in dicts.wordPairs) {
+	  // Oh well, just grab some last word.
+	  nextword = rndSelectFrom(dicts.lastWords);
 	}
 
 	// --- Should we end the sentence at this word? ---
@@ -131,10 +136,10 @@ function outputWack(dicts, numParas) {
 
 	let stopnow = false;
 	if (nextword in dicts.lastWords) {stopnow=true;} // Stop if it's sound to do so
-	if (wcount<sentMinLen) {stopnow=false;}          // Except never before reaching min size
+	if (wcount<mwOptions.minimumSentenceLength) {stopnow=false;}    // Except never before reaching min size
 	if (!(nextword in dicts.wordTriples)
 	   && !(nextword in dicts.wordPairs)){stopnow=true;} // But DO stop if there is no next key
-	if (wcount>sentMaxLen) {
+	if (wcount>mwOptions.maximumSentenceLength) {
 	  nextword=rndSelectFrom(dicts.lastWords);       // Hard stop, force last word if > max size
 	  stopnow=true;
 	}
@@ -154,9 +159,15 @@ function outputWack(dicts, numParas) {
   return theOutput;
 }
 
+
+/*
+ * === All the utility functions ===
+ */
+ 
 function cleanText(t) {
   return t.replace("Dr.", "Dr")
           .replace("e.g.", "for example")
+          .replace("e.g.", "in other words")
           .replace(/[^\u00C0-\u024F\u0300-\u04FFA-Za-z'’\d .?,!;/-]/g, " ")
 }
 
@@ -193,19 +204,36 @@ function restoreOptions() {
     maxParaLen: "6",
     outChannel: "alert"
   }
-  function seto(i,j,k) {
-    o.minParaLen=i;
-    o.maxParaLen=j;
-    o.outChannel=k;
+  function seto(plMin, plMax, pnMin, pnMax, pLen, sLenMin, sLenMax, t, chan) {
+    o.minParaLen=plMin;
+    o.maxParaLen=plMax;
+    o.paraMinCnt=plMin;
+    o.paraMaxCnt=plMax;
+    o.minParseLen=pLen;
+    o.tupletype=t;
+    o.outChannel=chan;
   }
 
   chrome.storage.sync.get({
     minimumParagraphLength: '2',
     maximumParagraphLength: '4',
+    minimumParagraphNumber: 1,
+    maximumParagraphNumber: 6,
+    minimumParseLength: 1,
+    tupleSize: 'pairs',
     outputChannel: 'alert'
     }, function(items) {
     //console.log(items);
-    seto(items.minimumParagraphLength, items.maximumParagraphLength, items.outputChannel);
+    seto(
+      items.minimumParagraphLength, 
+      items.maximumParagraphLength,
+      items.minimumParagraphNumber,
+      items.maximumParagraphNumber,
+      items.minimumSentenceLength,
+      items.maximumSentenceLength,
+      items.minimumParseLength,
+      items.tupleSize,
+      items.outputChannel)
   });
   return o;
 }

@@ -10,9 +10,8 @@
 
 <header><h1>Options for MarkWack extension</h1></header>
 
-<div>
-<h2>Length tuning parameters</h2>
-
+<fieldset>
+<legend>Output length tuning parameters</legend>
 Minimum paragraph length:
 <select id="minparalen">
  <option value="2">At least 2 sentences</option>
@@ -27,11 +26,8 @@ Maximum paragraph length:
  <option value="9">No more than 9 sentences</option>
  <option value="12">No more than 12 sentences</option>
 </select>
-</div>
 
 <br/>
-<br/>
-
 Minimum number or paragraphs:
 <select id="minparanum">
  <option value="1">At least 1 paragraph</option>
@@ -46,15 +42,52 @@ Maximum number or paragraphs:
  <option value="7">No more than 7 paragraphs</option>
  <option value="12">No more than 12 paragraphs</option>
 </select>
-</div>
+</fieldset>
 
-<h2>Output options</h2>
+<fieldset>
+<legend>Algorithm tuning options</legend>
+Only parse input sentences at least
+<select id="minparselen">
+  <option value="1">Any</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select>
+words long
+<br/>
+Minimum generated sentence length: 
+<select id="minphraselen">
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select>
+The generated random sentences will not be shorter than this except in rare circumstances.
+<br/>
+Maximum generated sentence length: 
+<select id="maxphraselen">
+  <option value="7">7</option>
+  <option value="11">11</option>
+  <option value="35">35</option>
+  <option value="100">100</option>
+</select>
+The sentences will end after reaching this limit, even if a last word can't be found.
+<br/>
+<strong>TODO:</strong> Build chain dictionary based on
+<select id="tuplesize">
+  <option value="pairs">word pairs &mdash; best for short texts</option>
+  <option value="triples">triplets and pairs &mdash; best quality</option>
+</select>
+</fieldset>
 
+<fieldset>
+<legend>Other options</legend>
 Where to send the output:
 <select id="outputchannel">
  <option value="alert">Pop up an alert</option>
  <option value="tab">Into a new tab</option>
 </select>
+</fieldset>
 
 <div id="status"></div>
 <button id="save">Save</button>
