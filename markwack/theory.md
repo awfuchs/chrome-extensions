@@ -4,6 +4,8 @@
 
 Click -> Read and clean text from current page -> build Markov-chain dictionaries -> generate text -> output
 
+<img src="assets/mw03-flowchart.png">
+
 ## Communication model
 
 ## State model
@@ -11,8 +13,8 @@ Click -> Read and clean text from current page -> build Markov-chain dictionarie
 The logical behavior of MarkWack is event driven, with the **background service worker** implementing a [finite state
 machine](https://en.wikipedia.org/wiki/Finite-state_machine) that responds to events via listeners on:
 
-* `action.onClick` &mdash; When the user clicks on the extension icon in the extension menu
-* `runtime.onMessage` &mdash; Messages coming from the tab content scripts
+* `chrome.action.onClick` &mdash; When the user clicks on the extension icon in the extension menu
+* `chrome.runtime.onMessage` &mdash; Messages coming from the tab content scripts
 
 The following state diagram and state transition table describe the state machine operation:
 
