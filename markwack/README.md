@@ -1,10 +1,11 @@
 # The markwack extension
 
-<img style="float: right;" src="package/images/mw-logo-128.png">
+<img src="package/images/mw-logo-128.png">
+
 Experimental extension for Chrome browser. Generates random text that resembles the content of the
 current web page. The name is a portmanteau of MARKov chain WACKy text.
 
-Install this extension from the [Chrome Web Store][cws-mw]
+Install version 0.3 of this extension from the [Chrome Web Store][cws-mw]. The source code is in the [.../markwack/package][mw-package] directory, with the tag mw0.3 reflecting the current version.
 
 ## Features
 
@@ -38,4 +39,5 @@ markwack does the following:
 
 [cws-hnr]: https://chrome.google.com/webstore/detail/ham-n-rich/holfkbigfojhhhkhhpafhmbhlcghigpn?hl=en&authuser=0
 [cws-mw]: https://chrome.google.com/webstore/detail/markwack/jelggpbbkpajemodhammmmbecnecanlf?hl=en&authuser=0
+[mw-package]: package
 
