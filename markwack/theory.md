@@ -13,7 +13,7 @@ output( choose_channel(), generatetext(build_dictionaries(sort_and_clean( get_pa
 ```
 
 
-## The saycontent.js content script, dictionaries, and Markov-chain algorithm
+## Content scripts and text generation
 
 The construction of the random text from the page content is done in the file `saycontent.js`. The service worker injects this script into the source tab
 
@@ -71,10 +71,9 @@ Because the source tab, the background service worker,  the destination tab (whe
 
 <img src="diagrams/sequence1.png">
 
-<p style="background-color:powderblue;">
-Note that this diagram is inaccurate in several respects. Most importantly, it does not show the Chrome extensions platform
-as a participant&mdash;the platform is what relays messages, provides the onClick event, and creates the output tab.
-  </p>
+***Note: this diagram is inaccurate in several respects.** It's out of date with respect to the implementation,
+but most importantly, it doesn't show the Chrome extensions platform as a participant. The extensions platform is
+what actually relays messages, provides the onClick event, and creates the output tab.*
 
 ## State model
 
