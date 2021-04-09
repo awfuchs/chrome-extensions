@@ -22,7 +22,7 @@ The construction of the random text from the page content is done in the file `s
 ### saycontent.js
 
 This page is driven by an event handler that act on requests sent to the tab. The key request is "create", which generates
-the random text from the page content.The general process of this is:
+the random text from the page content. The general process of this is:
 
 1. Read the text of the page.
 2. Clean the text (removing certain problem characters and strings; it's a bit of a hack).
@@ -71,8 +71,10 @@ Because the source tab, the background service worker,  the destination tab (whe
 
 <img src="diagrams/sequence1.png">
 
-***Note that this diagram is inaccurate in several respects. Most importantly, it does not show the Chrome extensions platform
-as a participant&mdash;the platform is what relays messages, provides the onClick event, and creates the output tab.***
+<p style="background-color:powderblue;">
+Note that this diagram is inaccurate in several respects. Most importantly, it does not show the Chrome extensions platform
+as a participant&mdash;the platform is what relays messages, provides the onClick event, and creates the output tab.
+  </p>
 
 ## State model
 
