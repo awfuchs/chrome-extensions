@@ -5,7 +5,7 @@
 Experimental extension for Chrome browser. Generates random text that resembles the content of the
 current web page. The name is a portmanteau of MARKov chain WACKy text.
 
-Install version 0.3 of this extension from the [Chrome Web Store][cws-mw]. The source code is in the [.../markwack/package][mw-package] directory, with the tag mw0.3 reflecting the current version.
+Install version 0.3 of this extension from the [Chrome Web Store][cws-mw]. The source code is in the [.../markwack/package][mw-package] directory, with the tag `mw0.3` reflecting the current version.
 
 ## Features
 
@@ -18,6 +18,7 @@ markwack does the following:
 1. Generate random output strings based on the rules in the arrays.
 1. Render the output.
 
+See also [Theory of operation][mw-theory]
 
 ## Issues
 
@@ -40,4 +41,5 @@ markwack does the following:
 [cws-hnr]: https://chrome.google.com/webstore/detail/ham-n-rich/holfkbigfojhhhkhhpafhmbhlcghigpn?hl=en&authuser=0
 [cws-mw]: https://chrome.google.com/webstore/detail/markwack/jelggpbbkpajemodhammmmbecnecanlf?hl=en&authuser=0
 [mw-package]: package
+[mw-theory]: theory.md
 
