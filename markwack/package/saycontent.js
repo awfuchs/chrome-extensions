@@ -6,7 +6,9 @@ var sentMaxLen=12;
 // Options
 var paraMinCnt=1;
 var paraMaxCnt=6;
-var mwOptions=restoreOptions();
+var mwOptions={};
+
+restoreOptions();
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -37,7 +39,8 @@ function buildAndGenerateOutput(){
       (makeDicts
         (asSentences
           (cleanText
-            (document.body.innerText
+            (fetchSourceText()
+            // was (document.body.innerText
     ))), paragraphs ));
   console.log(risultato);
  return risultato;
@@ -62,7 +65,8 @@ function makeDicts(t) {
   }
   for( s in t ) {
     if( t[s].length < mwOptions.minParseLen ) break;
-    words=t[s].split(/[ ,]+/);
+    //***was stripping commas*** words=t[s].split(/[ ,]+/);
+    words=t[s].split(/[ ]+/);
     if (words.length>2) {
       // --- Add first and last sentence words to respective lists ---
       blob.firstWords.push(words[0]);
@@ -102,13 +106,14 @@ function outputWack(dicts, numParas) {
   var wcount=0;
   var theOutput="";
   var nextword, p, w1, w2, i, j;
-  var numSentences=rndIntBetween(mwOptions.minParaLen, mwOptions.maxParaLen);
+  var numSentences;
 
   function emit(s){
     theOutput += s;
   }
 
   for( p=0; p<numParas; p++ ){
+    numSentences=rndIntBetween(mwOptions.minParaLen, mwOptions.maxParaLen);
     for (i=0; i<numSentences; i++) {
       wcount=1;
       w1=rndSelectFrom(dicts.firstWords);
@@ -136,10 +141,10 @@ function outputWack(dicts, numParas) {
 
 	let stopnow = false;
 	if (nextword in dicts.lastWords) {stopnow=true;} // Stop if it's sound to do so
-	if (wcount<mwOptions.minimumSentenceLength) {stopnow=false;}    // Except never before reaching min size
+	if (wcount<mwOptions.minSentenceLen) {stopnow=false;}    // Except never before reaching min size
 	if (!(nextword in dicts.wordTriples)
 	   && !(nextword in dicts.wordPairs)){stopnow=true;} // But DO stop if there is no next key
-	if (wcount>mwOptions.maximumSentenceLength) {
+	if (wcount>mwOptions.maxSentenceLen) {
 	  nextword=rndSelectFrom(dicts.lastWords);       // Hard stop, force last word if > max size
 	  stopnow=true;
 	}
@@ -164,6 +169,22 @@ function outputWack(dicts, numParas) {
  * === All the utility functions ===
  */
  
+function fetchSourceText() {
+  var r = document.body.innerText;
+  var elems=[];
+  // Here there be opportunities to improve
+  // ...fetch just the <p>
+  // ...fetch just the ".content"
+  // ...try several approaches and pick one yielding word count similar to body.innerText
+  // ...parameterize this from the stored options
+  r = "";
+  elems=document.querySelectorAll("p");
+  for( p of elems) {
+    r += p.innerText;
+  }
+  return r;
+}
+
 function cleanText(t) {
   return t.replace("Dr.", "Dr")
           .replace("e.g.", "for example")
@@ -199,22 +220,24 @@ function tuple( w1, w2 ) {
 
 
 function restoreOptions() {
-  let o = {
-    minParaLen: "1",
-    maxParaLen: "6",
-    outChannel: "alert"
+  function seto(items) {
+    var o={
+      minParaLen: items.minimumParagraphLength, 
+      maxParaLen: items.maximumParagraphLength,
+      paraMinCnt: items.minimumParagraphNumber,
+      paraMaxCnt: items.maximumParagraphNumber,
+      minParseLen: items.minimumParseLength,
+      tupletype: items.tupleSize,
+      outChannel: items.outputChannel,
+      minSentenceLen: items.minimumSentenceLength,
+      maxSentenceLen: items.maximumSentenceLength
+    };
+    mwOptions=o;
   }
-  function seto(plMin, plMax, pnMin, pnMax, pLen, sLenMin, sLenMax, t, chan) {
-    o.minParaLen=plMin;
-    o.maxParaLen=plMax;
-    o.paraMinCnt=plMin;
-    o.paraMaxCnt=plMax;
-    o.minParseLen=pLen;
-    o.tupletype=t;
-    o.outChannel=chan;
-  }
-
-  chrome.storage.sync.get({
+  chrome.storage.sync.get(
+    {
+    minimumSentenceLength: '4',
+    maximumSentenceLength: '20',
     minimumParagraphLength: '2',
     maximumParagraphLength: '4',
     minimumParagraphNumber: 1,
@@ -222,20 +245,9 @@ function restoreOptions() {
     minimumParseLength: 1,
     tupleSize: 'pairs',
     outputChannel: 'alert'
-    }, function(items) {
-    //console.log(items);
-    seto(
-      items.minimumParagraphLength, 
-      items.maximumParagraphLength,
-      items.minimumParagraphNumber,
-      items.maximumParagraphNumber,
-      items.minimumSentenceLength,
-      items.maximumSentenceLength,
-      items.minimumParseLength,
-      items.tupleSize,
-      items.outputChannel)
-  });
-  return o;
+    },
+    items => seto(items)
+  )
 }
 
 
