@@ -1,0 +1,14 @@
+{
+  "name": "Grouped Tab Lister",
+  "action": {},
+  "description": "List the tab groups in the current window, and the names of each contained tab group.",
+  "version": "0.1",
+  "manifest_version": 3,
+  "permissions": [
+    "tabs",
+    "tabGroups"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
