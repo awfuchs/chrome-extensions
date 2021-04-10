@@ -10,6 +10,7 @@ function save_options() {
   var pMin = document.getElementById('minparselen').value;
   var tSize = document.getElementById('tuplesize').value;
   var whatchannel = document.getElementById('outputchannel').value;
+  var elemType = document.getElementById('elementtype').value;
   
   chrome.storage.sync.set({
     minimumParagraphLength: minPL,
@@ -18,6 +19,7 @@ function save_options() {
     maximumParagraphNumber: maxPnum,
     minimumSentenceLength: minphrase,
     maximumSentenceLength: maxphrase,
+    htmlElementType: elemType,
     minimumParseLength: pMin,
     tupleSize: tSize,
     outputChannel: whatchannel
@@ -41,6 +43,7 @@ function restore_options() {
     maximumParagraphNumber: 6,
     minimumSentenceLength: 1,
     maximumSentenceLength: 6,
+    htmlElementType: "p",
     minimumParseLength: 1,
     tupleSize: 'pairs',
     outputChannel: 'alert'
@@ -51,6 +54,7 @@ function restore_options() {
     document.getElementById('maxparanum').value = items.maximumParagraphNumber;
     document.getElementById('minphraselen').value = items.minimumSentenceLength;
     document.getElementById('maxphraselen').value = items.maximumSentenceLength;
+    document.getElementById('elementtype').value = items.htmlElementType;
     document.getElementById('minparselen').value = items.minimumParseLength;
     document.getElementById('tuplesize').value = items.tupleSize;
     document.getElementById('outputchannel').value = items.outputChannel;

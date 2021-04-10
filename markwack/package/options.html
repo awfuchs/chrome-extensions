@@ -28,6 +28,8 @@ Maximum paragraph length:
 </select>
 
 <br/>
+<br/>
+
 Minimum number or paragraphs:
 <select id="minparanum">
  <option value="1">At least 1 paragraph</option>
@@ -42,10 +44,36 @@ Maximum number or paragraphs:
  <option value="7">No more than 7 paragraphs</option>
  <option value="12">No more than 12 paragraphs</option>
 </select>
+
+<br/>
+<br/>
+
+Minimum generated sentence length: 
+<select id="minphraselen">
+  <option value="3">At least 3 words</option>
+  <option value="4">At least 4 words</option>
+  <option value="5">At least 5 words</option>
+</select>
+<br/>
+Maximum generated sentence length: 
+<select id="maxphraselen">
+  <option value="7">No more than 7 words</option>
+  <option value="11">No more than 11 words</option>
+  <option value="35">No more than 35 words</option>
+  <option value="100">No more than 100 words</option>
+</select>
 </fieldset>
 
 <fieldset>
 <legend>Algorithm tuning options</legend>
+Use source text found in the document's
+<select id="elementtype">
+  <option value="p">&lt;p&gt;</option>
+  <option value="section">&lt;section&gt;</option>
+  <option value="body">&lt;body&gt;</option>
+</select>
+elements.
+<br/>
 Only parse input sentences at least
 <select id="minparselen">
   <option value="1">Any</option>
@@ -55,25 +83,10 @@ Only parse input sentences at least
   <option value="5">5</option>
 </select>
 words long
+
+
 <br/>
-Minimum generated sentence length: 
-<select id="minphraselen">
-  <option value="3">3</option>
-  <option value="4">4</option>
-  <option value="5">5</option>
-</select>
-The generated random sentences will not be shorter than this except in rare circumstances.
-<br/>
-Maximum generated sentence length: 
-<select id="maxphraselen">
-  <option value="7">7</option>
-  <option value="11">11</option>
-  <option value="35">35</option>
-  <option value="100">100</option>
-</select>
-The sentences will end after reaching this limit, even if a last word can't be found.
-<br/>
-<strong>TODO:</strong> Build chain dictionary based on
+Build chain dictionary based on
 <select id="tuplesize">
   <option value="pairs">word pairs &mdash; best for short texts</option>
   <option value="triples">triplets and pairs &mdash; best quality</option>

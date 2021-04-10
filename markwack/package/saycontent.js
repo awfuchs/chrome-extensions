@@ -125,7 +125,7 @@ function outputWack(dicts, numParas) {
       while( true ) {
 	wcount++;
 	w1_w2=tuple(w1,w2);
-	if(w1_w2 in dicts.wordTriples) {
+	if(w1_w2 in dicts.wordTriples && mwOptions.tupleType=="triples") {
 	  nextword = rndSelectFrom(dicts.wordTriples[w1_w2]);
 	} else if(w2 in dicts.wordPairs) {
 	  // No triple? Then here's hoping that it does exist...
@@ -170,17 +170,11 @@ function outputWack(dicts, numParas) {
  */
  
 function fetchSourceText() {
-  var r = document.body.innerText;
+  var r = "";
   var elems=[];
-  // Here there be opportunities to improve
-  // ...fetch just the <p>
-  // ...fetch just the ".content"
-  // ...try several approaches and pick one yielding word count similar to body.innerText
-  // ...parameterize this from the stored options
-  r = "";
-  elems=document.querySelectorAll("p");
-  for( p of elems) {
-    r += p.innerText;
+  elems=document.querySelectorAll(mwOptions.elemType);
+  for( e of elems) {
+    r += e.innerText;
   }
   return r;
 }
@@ -226,6 +220,7 @@ function restoreOptions() {
       maxParaLen: items.maximumParagraphLength,
       paraMinCnt: items.minimumParagraphNumber,
       paraMaxCnt: items.maximumParagraphNumber,
+      elemType:   items.htmlElementType,
       minParseLen: items.minimumParseLength,
       tupletype: items.tupleSize,
       outChannel: items.outputChannel,
@@ -242,6 +237,7 @@ function restoreOptions() {
     maximumParagraphLength: '4',
     minimumParagraphNumber: 1,
     maximumParagraphNumber: 6,
+    htmlElementType: "p",
     minimumParseLength: 1,
     tupleSize: 'pairs',
     outputChannel: 'alert'
