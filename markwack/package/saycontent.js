@@ -63,10 +63,11 @@ function makeDicts(t) {
     wordPairs: {},
     wordTriples: {}
   }
-  for( s in t ) {
-    if( t[s].length < mwOptions.minParseLen ) break;
-    //***was stripping commas*** words=t[s].split(/[ ,]+/);
-    words=t[s].split(/[ ]+/);
+  for( var s0 of t ) {
+    s=s0.trim(); //srsly
+    if( s.length < mwOptions.minParseLen ) continue;
+    //***was stripping commas*** words=s.split(/[ ,]+/);
+    let words=s.split(/[ ]+/);
     if (words.length>2) {
       // --- Add first and last sentence words to respective lists ---
       blob.firstWords.push(words[0]);
@@ -80,7 +81,7 @@ function makeDicts(t) {
         }
         blob.wordPairs[w].push(n);
         if(wx < words.length-2) {
-          word3=words[wx+2];
+          let word3=words[wx+2];
           w1_w2=tuple(w,n); // e.g. "when|they"
 	  if( !(w1_w2 in blob.wordTriples) ) {
 	    blob.wordTriples[w1_w2]=[];
@@ -174,7 +175,7 @@ function fetchSourceText() {
   var elems=[];
   elems=document.querySelectorAll(mwOptions.elemType);
   for( e of elems) {
-    r += e.innerText;
+    r += " "+e.innerText;
   }
   return r;
 }
