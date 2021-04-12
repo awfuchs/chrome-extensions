@@ -33,7 +33,7 @@ function doImAlive(foo) {
 
 
 function buildAndGenerateOutput(){
-  paragraphs=rndIntBetween(mwOptions.paraMinCnt, mwOptions.paraMaxCnt);
+  let paragraphs=rndIntBetween(mwOptions.paraMinCnt, mwOptions.paraMaxCnt);
   let risultato=
     (outputWack
       (makeDicts
@@ -42,21 +42,19 @@ function buildAndGenerateOutput(){
             (fetchSourceText()
             // was (document.body.innerText
     ))), paragraphs ));
-  console.log(risultato);
  return risultato;
 }
 
 /*
- * The makeDicts function: build a dictionary collection
+ * makeDicts: builds a dictionary collection
  *
  * t -- An array of strings, one per sentence in the input
  *
- * Returns: a dictionary collection
+ * Returns: a dictionary collection object
  */
 
 function makeDicts(t) {
-  var w;
-  var n;
+  var w, n, word3, words;
   var blob = {
     firstWords: [],
     lastWords: [],
@@ -66,8 +64,7 @@ function makeDicts(t) {
   for( var s0 of t ) {
     s=s0.trim(); //srsly
     if( s.length < mwOptions.minParseLen ) continue;
-    //***was stripping commas*** words=s.split(/[ ,]+/);
-    let words=s.split(/[ ]+/);
+    words=s.split(/[ ]+/);
     if (words.length>2) {
       // --- Add first and last sentence words to respective lists ---
       blob.firstWords.push(words[0]);
@@ -81,7 +78,7 @@ function makeDicts(t) {
         }
         blob.wordPairs[w].push(n);
         if(wx < words.length-2) {
-          let word3=words[wx+2];
+          word3=words[wx+2];
           w1_w2=tuple(w,n); // e.g. "when|they"
 	  if( !(w1_w2 in blob.wordTriples) ) {
 	    blob.wordTriples[w1_w2]=[];
@@ -94,8 +91,9 @@ function makeDicts(t) {
   return blob;
 }
 
+
 /*
- * The outputWack function: create n paragraphs of wacky ouput
+ * outputWack: create n paragraphs of wacky ouput
  *
  * dicts -- a dictionary collection object
  * numParas -- how many paragraphs to generate
@@ -104,70 +102,96 @@ function makeDicts(t) {
  */
  
 function outputWack(dicts, numParas) {
-  var wcount=0;
-  var theOutput="";
-  var nextword, p, w1, w2, i, j;
-  var numSentences;
+  const watchdoglimit=10000;
+  var numSentences, watchdog;
+  var output, theOutput="";
 
-  function emit(s){
-    theOutput += s;
-  }
-
-  for( p=0; p<numParas; p++ ){
+  for( para=0; para<numParas; para++ ) {
+    watchdog=0;
     numSentences=rndIntBetween(mwOptions.minParaLen, mwOptions.maxParaLen);
+
     for (i=0; i<numSentences; i++) {
-      wcount=1;
-      w1=rndSelectFrom(dicts.firstWords);
-      w2=rndSelectFrom(dicts.wordPairs[w1]);
-      emit( w1 );
-      emit( " " );
-      emit( w2 );
-      emit( " " );
-      while( true ) {
-	wcount++;
-	w1_w2=tuple(w1,w2);
-	if(w1_w2 in dicts.wordTriples && mwOptions.tupleType=="triples") {
-	  nextword = rndSelectFrom(dicts.wordTriples[w1_w2]);
-	} else if(w2 in dicts.wordPairs) {
-	  // No triple? Then here's hoping that it does exist...
-	  nextword = rndSelectFrom(dicts.wordPairs[w2]);
-	} else if(w2 in dicts.wordPairs) {
-	  // Oh well, just grab some last word.
-	  nextword = rndSelectFrom(dicts.lastWords);
-	}
-
-	// --- Should we end the sentence at this word? ---
-	// TODO: This logic can be improved. As sentence length exceeds ideal, should
-	// look ahead and pick Triples that have lastWords in them, or then Pairs that do.
-
-	let stopnow = false;
-	if (nextword in dicts.lastWords) {stopnow=true;} // Stop if it's sound to do so
-	if (wcount<mwOptions.minSentenceLen) {stopnow=false;}    // Except never before reaching min size
-	if (!(nextword in dicts.wordTriples)
-	   && !(nextword in dicts.wordPairs)){stopnow=true;} // But DO stop if there is no next key
-	if (wcount>mwOptions.maxSentenceLen) {
-	  nextword=rndSelectFrom(dicts.lastWords);       // Hard stop, force last word if > max size
-	  stopnow=true;
-	}
-
-	if (stopnow) {
-	  emit( nextword+". " );
-	  break;
-	} else {
-	  emit( nextword+" " );
-	  w1=w2;
-	  w2=nextword;
-	}
-      }
+      output=oneRandomSentence(dicts);
+      if( output == "" ) { i--; }         // if sentence aborted, fiddle the counter
+      else { theOutput += output; }
+      if(watchdog++>watchdoglimit) break; // but stop runaway condition
     }
-  emit("\n\n");
+    theOutput += "\n\n";
   }
   return theOutput;
 }
 
 
 /*
- * === All the utility functions ===
+ * oneRandomSentence: make a single sentence
+ *
+ * dicts -- a dictionary collection object
+ *
+ * Returns: a string containing the generated sentence (on success)
+ *          OR "" on failure (chain reached dead end or max length exceeded)
+ */
+
+function oneRandomSentence(dicts) {
+  var nextword, w1, w2, stopnow;
+  var wcount=0;
+  var theSentence="";
+
+  function emit(s){ theSentence += s; }
+  function wordContinues(w) { emit(w+" "); }
+  function wordEnds(w) { emit(w+". "); }
+
+  wcount=1;
+  w1=rndSelectFrom(dicts.firstWords);
+  w2=rndSelectFrom(dicts.wordPairs[w1]);
+  emit( w1+" "+w2+" " );
+  for(;;) {
+    wcount++;
+    nextword=pickNextWord( w1, w2, dicts );
+    if( nextword == "" ) { return ""; }              // !! no next word available, abort sentence
+
+    // --- Should we end the sentence at this word? ---
+    stopnow = false;
+    if( dicts.lastWords.includes(nextword) ) {stopnow=true;}  // Stop if it's sound to do so
+    if( wcount<mwOptions.minSentenceLen )    {stopnow=false;} // Except never before reaching min size
+    if( wcount>mwOptions.maxSentenceLen )    { return ""; }   // !! past max length, abort sentence
+
+    if (stopnow) { wordEnds(nextword); return theSentence; }  // <--- exit with result
+    else         { wordContinues(nextword); }
+    w1=w2;
+    w2=nextword;
+  }
+}
+
+
+/*
+ * pickNextWord: generate a valid next word based on preceding word(s)
+ *
+ * dicts -- a dictionary collection object
+ * w2 -- the last word that was output in the sentence
+ * w1 -- the word that was output in the sentence before w2
+ *
+ * Returns: a randomly selected and valid next word
+ *          OR "" on failure (no next word available)
+ */
+
+function pickNextWord(w1, w2, dicts) {
+  let w1_w2=tuple(w1,w2);
+  if(w1_w2 in dicts.wordTriples
+     && mwOptions.tupleType=="triples") {
+    nextword = rndSelectFrom(dicts.wordTriples[w1_w2]); // grab a triple if you can
+  }
+  else if(w2 in dicts.wordPairs) {
+    nextword = rndSelectFrom(dicts.wordPairs[w2]);      // or grab a double if you can
+  }
+  else {
+    nextword = "";                                      // "" means no next word available
+  }
+  return nextword;
+}
+
+
+/*
+ * ===== All the utility functions =====
  */
  
 function fetchSourceText() {
