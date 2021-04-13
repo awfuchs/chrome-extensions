@@ -1,4 +1,4 @@
-# The tablister extension
+## The tablister extension
 
 This extension lists the tabs and tab groups that are present in the active window.
 
