@@ -2,9 +2,10 @@
   "name": "Grouped Tab Lister",
   "action": {},
   "description": "List the tab groups in the current window, and the names of each contained tab group.",
-  "version": "0.1",
+  "version": "0.2",
   "manifest_version": 3,
   "permissions": [
+    "windows",
     "tabs",
     "tabGroups"
   ],

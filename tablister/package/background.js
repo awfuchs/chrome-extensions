@@ -1,22 +1,51 @@
-// --- Listener for icon click ---
-chrome.action.onClicked.addListener((tab) => {
-  askForTheTabGroups( tab );
-});
-
-var sourceTab=0;
+var sourceTab;
+var sinkTab;
 var theTabGroups=[];
 
+
+// = = = = = Listeners and handlers = = = = = 
+
+chrome.action.onClicked.addListener((tab) => {
+  handleClick( tab );
+});
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    handleEvent( request.op, request.data );
+  }
+);
+
+function handleClick(tab) {
+  sourceTab=tab;            // sourceTab is the clicked one
+  chrome.windows.create(
+    {url: "result.html"},
+    w => sinkTab=w.tabs[0]  // sinkTab is the one in the created window
+  ) ;
+}
+
+function handleEvent(op, data) {
+  if( op == "sink_ready" ) { askForTheTabGroups(sourceTab); }
+}
+
+
+// = = = = = The functional functions = = = = =
+
 function askForTheTabGroups(tab) {
-  sourceTab=tab;
   wid=tab.windowId;
   chrome.tabGroups.query(
     {windowId: wid},
     groups => {
-      theTabGroups=groups;
-      listWindowContaining(sourceTab);
+      if( chrome.runtime.lastError ) {
+        console.error(chrome.runtime.lastError);
+      }
+      else {
+	theTabGroups=groups;
+	listWindowContaining(tab); // do you get the feeling this should all be much more promise-y?
+      }
     }
   )
 }
+
 
 function listWindowContaining(tab) {
   getTabsGroups(tab)
@@ -66,16 +95,37 @@ async function loadTheGroups(theTabs) {
       }
     }
     recordTabInGroup(tabTitle,groupTitle);
+    for( n in theGroups ) {
+      theGroups[n].sort();
+    }
   }
   return theGroups;
 }
 
-function outputThe( blob ) {
+function noutputThe( blob ) {
   for( g in blob ) {
     console.log( ">>> "+g+" <<<");
     for( t=0; t<blob[g].length; t++ ) {
       console.log( blob[g][t] );
     }
   }
+}
+
+function outputThe( blob ) {
+  blobcollector="";
+  function emit(s) { blobcollector += s+"\n"; }
+
+  for( g in blob ) {
+    emit( "<h2>"+g+"</h2><ul>");
+    for( t=0; t<blob[g].length; t++ ) {
+      emit( "<li>"+blob[g][t]+"</li>" );
+    }
+    emit("</ul>");
+  }
+  console.log( blobcollector );
+  chrome.tabs.sendMessage(
+    sinkTab.id,
+    {op: "output", data: blobcollector }
+  );
 }
 
