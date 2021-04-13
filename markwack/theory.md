@@ -128,3 +128,4 @@ The options page (available through the extension menu icon's "more" widget) let
 * Target sentence length
 * Algorithmic details: sample chain length, generated sentence length, and (TODO: select between triplets/pairs for dictionary model)
 * Output destination: an alert, a new tab, or (TODO: new window, other)
+
