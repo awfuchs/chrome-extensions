@@ -6,9 +6,10 @@ Experimental extensions for Chrome browser. The following extensions so far:
   respective QRZ pages. [Free from Chrome Web Store][cws-hnr]
 * **markwack** &mdash; *Mark*ov-chain generator of *wack*y text. Creates random text based on the
   content of the current web page. [Free from Chrome Web Store][cws-mw]
-* **tablister** &mdash; Displays a list of the tabs and tab groups present in the active window.
+* **tablister** &mdash; Displays a list of the tabs and tab groups present in the active window. [Free from the Chrome Web Store][cws-tl]
 
 
-[cws-hnr]: https://chrome.google.com/webstore/detail/ham-n-rich/holfkbigfojhhhkhhpafhmbhlcghigpn?hl=en&authuser=0
-[cws-mw]: https://chrome.google.com/webstore/detail/markwack/jelggpbbkpajemodhammmmbecnecanlf?hl=en&authuser=0
+[cws-hnr]: https://chrome.google.com/webstore/detail/ham-n-rich/holfkbigfojhhhkhhpafhmbhlcghigpn
+[cws-mw]: https://chrome.google.com/webstore/detail/markwack/jelggpbbkpajemodhammmmbecnecanlf?hl=en
+[cws-tl]: hhttps://chrome.google.com/webstore/detail/grouped-tab-lister/ndbkeneicaagochkminjimalhpnamepo
 
