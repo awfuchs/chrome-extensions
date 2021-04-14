@@ -7,7 +7,6 @@ Experimental extensions for Chrome browser. The following extensions so far:
 * **markwack** &mdash; *Mark*ov-chain generator of *wack*y text. Creates random text based on the
   content of the current web page. [Free from Chrome Web Store][tablister]
 * **tablister** &mdash; Displays a list of the tabs and tab groups present in the active window. [Free from Chrome Web Store][cws-tl]
-* 
 
 
 [cws-hnr]: https://chrome.google.com/webstore/detail/ham-n-rich/holfkbigfojhhhkhhpafhmbhlcghigpn
