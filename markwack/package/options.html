@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MarkWack extension options</title>
+  <link rel="stylesheet" href="css/awsm.min.css" id="theme">
+  <link rel="stylesheet" id="preload-theme">
+  <link rel="stylesheet" id="prism-theme">
+</head>
+<body>
+
+<header><h1>Options for MarkWack extension</h1></header>
+
+<p>He added specific impurity atoms to make solid-state diodes in December 1947.
+Amid the subsequent development years following that Shockley started building block
+of silicon transistors made its first silicon surface one into the frequency response of its first
+photovoltaic cell operating at efficiencies near 10.
+The material does have a third contact, known as Teal and producing reflection
+seismographs for silicon devices had made its name, the silicon transistors in the sobering
+challenges of crystals drawn from hot oil industry.
+</p>
+
+<fieldset style="background-color: linen">
+<legend><strong>Output length tuning parameters</strong></legend>
+Minimum paragraph length:
+<select id="minparalen">
+ <option value="2">At least 2 sentences</option>
+ <option value="4">At least 3 sentences</option>
+ <option value="5">At least 5 sentences</option>
+</select>
+
+<br/>
+Maximum paragraph length:
+<select id="maxparalen">
+ <option value="6">No more than 6 sentences</option>
+ <option value="9">No more than 9 sentences</option>
+ <option value="12">No more than 12 sentences</option>
+</select>
+
+<br/>
+<br/>
+
+Minimum number or paragraphs:
+<select id="minparanum">
+ <option value="1">At least 1 paragraph</option>
+ <option value="2">At least 2 paragraphs</option>
+ <option value="3">At least 3 paragraphs</option>
+</select>
+
+<br/>
+Maximum number or paragraphs:
+<select id="maxparanum">
+ <option value="4">No more than 4 paragraphs</option>
+ <option value="7">No more than 7 paragraphs</option>
+ <option value="12">No more than 12 paragraphs</option>
+</select>
+
+<br/>
+<br/>
+
+Minimum generated sentence length: 
+<select id="minphraselen">
+  <option value="3">At least 3 words</option>
+  <option value="4">At least 4 words</option>
+  <option value="5">At least 5 words</option>
+</select>
+<br/>
+Maximum generated sentence length: 
+<select id="maxphraselen">
+  <option value="7">No more than 7 words</option>
+  <option value="11">No more than 11 words</option>
+  <option value="35">No more than 35 words</option>
+  <option value="100">No more than 100 words</option>
+</select>
+</fieldset>
+
+<br/>
+<br/>
+
+<fieldset style="background-color: linen">
+<legend><strong>Algorithm tuning options</strong></legend>
+Use source text found in the document's
+<select id="elementtype">
+  <option value="p">&lt;p&gt;</option>
+  <option value="section">&lt;section&gt;</option>
+  <option value="body">&lt;body&gt;</option>
+</select>
+elements.
+<br/>
+Only parse input sentences at least
+<select id="minparselen">
+  <option value="1">Any</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select>
+words long
+
+
+<br/>
+Build chain dictionary based on
+<select id="tuplesize">
+  <option value="pairs">word pairs &mdash; best for short texts</option>
+  <option value="triples">triplets and pairs &mdash; best quality</option>
+</select>
+</fieldset>
+
+<br/>
+<br/>
+
+<fieldset style="background-color: linen">
+<legend><strong>Other options</strong></legend>
+Where to send the output:
+<select id="outputchannel">
+ <option value="alert">Pop up an alert</option>
+ <option value="tab">Into a new tab</option>
+</select>
+</fieldset>
+
+<br/>
+<br/>
+
+<div id="status"></div>
+<button id="save">Save</button>
+
+<script src="options.js"></script>
+</body>
+</html>
