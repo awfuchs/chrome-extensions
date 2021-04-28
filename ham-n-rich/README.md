@@ -21,7 +21,7 @@ v0.2 adds support for international callsigns.
 
 ## To do
 
-* Support non-US calls
+* Fix it to exclude callsigns inside link tags or similar containers.
 
 
 [cws-hnr]: https://chrome.google.com/webstore/detail/ham-n-rich/holfkbigfojhhhkhhpafhmbhlcghigpn?hl=en&authuser=0
