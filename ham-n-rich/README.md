@@ -11,9 +11,11 @@ Install this extension from the [Chrome Web Store][cws-hnr]
 ham-n-rich locates text within body.innerHTML that matches a regexp for US callsigns, and encloses
 that in a link to the QRZ page for that callsign.
 
+v0.2 adds support for international callsigns.
+
 ## Issues
 
-* US callsigns only (that was the RE that I got working so far...)
+<!--* US callsigns only (that was the RE that I got working so far...)-->
 * Breaks on various edge cases, including importantly any already-linked calls, which get mangled.
 * Replaces innerHTML, so might break other stuff.
 
